@@ -23,22 +23,47 @@ do
 
 	if [ "${command[0]}" == "commands" ]
 	then 
-		ListCommand
+		if [ "${#command[*]}" == 1 ]
+		then
+			ListCommand
+		else
+			echo "Error! Argument more than one."
+			echo "Do you mean \"commands\"?"
+		fi
+
 
 	elif [ "${command[0]}" == "help" ]
 	then 
-		CommandInfo "${command[1]}"
-	
+		if [ "${#command[*]}" == 2 ]
+		then 
+			CommandInfo "${command[1]}"
+		else
+			report_argument_num_error	
+		fi
 
-	# Function Implementation
+
+
+	# Directory functions, implemented in "directory.sh"
+
 	elif [ "${command[0]}" == "cd" ]
 	then
-		change_directory "${command[1]}"
-	
+		if [ "${#command[*]}" == 2 ]
+		then
+			change_directory "${command[1]}"
+		else
+			report_argument_num_error "cd"
+		fi
+
+
 
 	elif [ "${command[0]}" == "cp" ]
 	then 
-		copy_dircetory "${command[1]}"
+		if [ "${#command[*]}" == 2 ]
+		then
+			copy_dircetory "${command[1]}"	
+		else
+			report_argument_num_error "cp"
+		fi
 
 
 	elif [ "${command[0]}" == "backup" ]
@@ -47,18 +72,26 @@ do
 		if [ "${#command[*]}" == 2 ]
 		then
 			database_backup "${command[0]}"
-		else
+		elif [ "${#command[*]}" == 1 ]
+		then
 			database_backup
+		else
+			report_argument_num_error "backup"
 		fi
 
 
 
 	elif [ "${command[0]}" == "restore" ]
 	then
-		restore_from_tar "${command[1]}"
+		if [ "${#command[*]}" == 2 ]
+		then
+			restore_from_tar "${command[1]}"
+		else
+			report_argument_num_error "restore"
+		fi
 	fi
 
-
+	
 
 
 done

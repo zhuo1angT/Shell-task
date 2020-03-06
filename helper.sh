@@ -100,7 +100,17 @@ function CommandInfo()
 }
 
 
-
+function report_argument_num_error()
+{
+	echo "Error! Argument number wrong!"
+	
+	if [ $# == 1 ]
+	then
+		echo -e "Enter \"help \033[4m$1\033[0m\" to get more detailed command info."
+	else
+		echo -e "Enter \"help \033[4mcommand\033[0m\" to get command list"	
+	fi
+}
 
 
 
