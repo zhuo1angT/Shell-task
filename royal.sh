@@ -12,8 +12,6 @@ echo ""
 
 
 
-
-
 function ListCommand()
 {
 	echo ""
@@ -100,17 +98,17 @@ function CommandInfo()
 
 
 
-while [ 1 ]
+while true
 do
-	echo -e "\033[36m royal> \033[0m\c"
-	read command
-	if [ $command == "commands" ]
+	echo -e "\033[36m royal> \033[0m\c"  # When debug, comment this line, tool bug here
+	read -r command
+	if [ "$command" == "commands" ]
 	then 
 		ListCommand
-	elif [ $command == "help" ]
+	elif [ "$command" == "help" ]
 	then 
 		read -p "Please Enter command name > " name
-		CommandInfo $name
+		CommandInfo "$name"
 	fi
 done
 
