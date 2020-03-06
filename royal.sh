@@ -101,109 +101,14 @@ do
 				cp "${command[2]}"/*.json "$PWD"
 			elif [ "${command[1]}" == "-t" ]
 			then
-				tar -xzvf "$2".tar.gz
+				# Acturally, it is a merge operation
+				restore_from_tar "${command[2]}"
 			fi
 		elif [ "${#command[*]}" == 2 ]
 		then	
 			if [ "${command[1]}" == "-m" ]
 			then
-				touch entity.json
-				
-				echo "{" >> entity.json
-				
-				read -p "Enter name: > " name
-				echo "\"name\":\"$name\"" >> entity.json
-
-				
-				read -p "Enter ID: > " ID
-				echo ",\"ID\":\"$ID\"" >> entity.json
-
-				read -p "Enter sex: > " sex
-				echo ",\"sex\":\"$sex\"" >> entity.json
-
-				echo "Enter couples..."
-				echo "raw ID, separated with space, nothing else shall be entered:" 
-				echo " > "
-				read -a couples
-
-				if [ "${#couples[*]}" -gt 0 ]
-				then 
-					echo ",\"couples\":[" >> entity.json
-				fi
-
-				for ((i=0; i < "${#couples[*]}"; i++))
-				do
-					if [ $i -gt 0 ]
-					then
-						printf "," >> entity.json
-					fi
-					printf "%s" "${couples[$i]}" >> entity.json
-				done
-
-				if [ "${#couples[*]}" -gt 0 ]
-				then 
-					echo "]" >> entity.json
-				fi
-
-
-
-				echo "Enter children..."
-				echo "raw ID, separated with space, nothing else shall be entered:"
-				echo " > "
-				read -a children
-
-				if [ "${#children[*]}" -gt 0 ]
-				then 
-					echo ",\"children\":[" >> entity.json
-				fi
-
-				for ((i=0; i < "${#children[*]}"; i++))
-				do
-					if [ $i -gt 0 ]
-					then
-						printf "," >> entity.json
-					fi
-					printf "%s" "${children[$i]}" >> entity.json
-				done
-
-				if [ "${#children[*]}" -gt 0 ]
-				then 
-					echo "]" >> entity.json
-				fi
-
-				read -p "Enter maintitle: > " maintitle
-				echo ",\"maintitle\":\"$maintitle\"" >> entity.json
-
-
-
-				echo "Enter all titles..."
-				echo "raw string, separated with space, nothing else shall be entered:"
-				echo " > " 
-				read -a titles
-
-
-				if [ "${#titles[*]}" -gt 0 ]
-				then 
-					echo ",\"titles\":[" >> entity.json
-				fi
-
-				for ((i=0; i < "${#titles[*]}"; i++))
-				do
-					if [ $i -gt 0 ]
-					then
-						printf "," >> entity.json
-					fi
-					printf "%s" "${titles[$i]}" >> entity.json
-				done
-
-				if [ "${#titles[*]}" -gt 0 ]
-				then 
-					echo "]" >> entity.json
-				fi
-				echo "}" >> entity.json
-			
-				mv entity.json  "$ID".json
-			
+				manually_import
 			fi
 		fi
 
