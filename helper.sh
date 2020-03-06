@@ -13,8 +13,8 @@ function ListCommand()
 	echo ""
 
 	echo -e "cd \t\t\t\033[4mData Dirctory\033[0m" 
-	echo -e "mv \t\t\t\033[4mNew Dirctory\033[0m"
-	echo -e "backup \t\t\t[\033[4mOutput File Path\033[0m]"
+	echo -e "cp \t\t\t\033[4mNew Dirctory\033[0m"
+	echo -e "backup \t\t\t[\033[4mOutput File Dirctory\033[0m]"
 	echo -e "restore \t\t\033[4mDBFile Path\033[0m [\033[4mWorking Dir\033[0m]"
 	
 	echo -e "import \t\t\t[OPTION] ..."	
@@ -42,12 +42,13 @@ function CommandInfo()
 	"cd") 
 		echo "Change the data dirctory to the given path."
 		;;
-	"mv") 
+	"cp") 
 		echo "Copy the current database to the given path."
 		;;
 	"backup") 
 		echo "Compress and save the database to the given path."
-		echo "Default value is the current \"Working Directory\"."
+		echo "Default value is the current \"Working Directory\","
+		echo "With a filename of current time."
 		;;
 	"restore") 
 		echo "Load data from the compressed database and extract them to \"Working Directory\"."
