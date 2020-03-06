@@ -25,7 +25,7 @@ do
 	then 
 		if [ "${#command[*]}" == 1 ]
 		then
-			ListCommand
+			list_command
 		else
 			echo "Error! Argument more than one."
 			echo "Do you mean \"commands\"?"
@@ -36,7 +36,7 @@ do
 	then 
 		if [ "${#command[*]}" == 2 ]
 		then 
-			CommandInfo "${command[1]}"
+			command_info "${command[1]}"
 		else
 			report_argument_num_error	
 		fi

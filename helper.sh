@@ -8,7 +8,7 @@
 
 
 
-function ListCommand()
+function list_command()
 {
 	echo ""
 
@@ -34,7 +34,7 @@ function ListCommand()
 
 
 
-function CommandInfo()
+function command_info()
 {
 	echo ""
 	echo ""
