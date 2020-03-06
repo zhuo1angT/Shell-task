@@ -16,8 +16,8 @@ function list_command()
 	echo -e "cp \t\t\t\033[4mNew Dirctory\033[0m"
 	echo -e "backup \t\t\t[\033[4mOutput File Dirctory\033[0m]"
 	echo -e "restore \t\t\033[4mDBFile Path\033[0m [\033[4mWorking Dir\033[0m]"
-	
 	echo -e "import \t\t\t[OPTION] ..."	
+	
 	echo -e "queryFamily \t\t\033[4mPerson ID\033[0m"
 	echo -e "processFamily \t\t[\033[4mOutput File Path\033[0m]"
 	echo -e "green \t\t\t[\033[4mOutput File Path\033[0m]"
@@ -27,7 +27,8 @@ function list_command()
 	echo -e "processTitle \t\t[\033[4mOutput File Path\033[0m]"
 	
 	echo -e "exit"
-	echo "----------------"
+	echo ""
+	echo ""
 }
 
 
@@ -58,7 +59,7 @@ function command_info()
 		echo "There are three ways to import data to \"Working Directory\"."
 		echo ""
 		echo "\"import -d ...\""
-		echo "Copy All \"*.JSON\" file from \"Data Dirctory\" to current \"Working Directory\"." 
+		echo "Copy All \"*.json\" file from \"Data Dirctory\" to current \"Working Directory\"." 
 		echo "The caller have to guarantee that all JSON file encodes profile."
 		echo ""
 		echo "\"import -t ...\""
@@ -96,7 +97,8 @@ function command_info()
 		;;
 	esac
 	
-	echo "----------------"
+	echo ""
+	echo ""
 }
 
 
