@@ -12,11 +12,14 @@ echo ""
 
 source ./helper.sh 
 source ./directory.sh
+source ./family.sh
+
 
 
 while true
 do
-	echo -e "\033[36m royal> \033[0m\c"  # When debug, comment this line, tool bug here
+	#echo -e "\033[36m royal> \033[0m\c"  # When debug, comment this line, tool bug here
+
 	read -a command
 
 	#echo "${#command[*]}"
@@ -110,9 +113,38 @@ do
 			then
 				manually_import
 			fi
+		else
+			report_argument_num_error import
 		fi
 
 
+
+
+
+	elif [ "${command[0]}" == "queryPersonFamily" ]
+	then
+		# shortcut: if the "argc" is not 2, gives 0 without calc the next expr
+		# use regular expresion to check if the argument is a number (ID is required)  
+		if [ "${#command[*]}" == 2 ] && [[ "${command[1]}" != *[!0-9]* ]]
+		then
+			query_person_family "${command[1]}"
+		else
+			report_argument_num_error queryPersonFamily
+		fi
+
+
+
+	elif [ "${command[0]}" == "exit" ]
+	then
+		if [ "${#command[*]}" == 1 ]
+		then
+			exit 0
+		else
+			report_argument_num_error exit
+		fi
+
+	else
+		report_argument_num_error	
 
 	fi
 
