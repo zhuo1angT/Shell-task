@@ -18,11 +18,12 @@ source ./family.sh
 
 while true
 do
-	#echo -e "\033[36m royal> \033[0m\c"  # When debug, comment this line, tool bug here
+	echo -e "\033[36mroyal> \033[0m\c"  # When debug, comment this line, tool bug here
 
 	read -a command
 
 	#echo "${#command[*]}"
+
 
 	if [ "${command[0]}" == "commands" ]
 	then 
@@ -53,6 +54,7 @@ do
 		if [ "${#command[*]}" == 2 ]
 		then
 			change_directory "${command[1]}"
+			generate_all_family
 		else
 			report_argument_num_error "cd"
 		fi
@@ -89,6 +91,7 @@ do
 		if [ "${#command[*]}" == 2 ]
 		then
 			restore_from_tar "${command[1]}"
+			generate_all_family
 		else
 			report_argument_num_error "restore"
 		fi
@@ -116,6 +119,7 @@ do
 		else
 			report_argument_num_error import
 		fi
+		generate_all_family
 
 
 
@@ -132,8 +136,18 @@ do
 			report_argument_num_error queryPersonFamily
 		fi
 
-
-
+	
+	elif [ "${command[0]}" == "processFamily" ]
+	then
+		if [ "${#command[*]}" == 1 ]
+		then
+			process_family "./"
+		elif [ "${#command[*]}" == 2 ]; then
+			process_family "${command[1]}"
+		else
+			report_argument_num_error processFamily
+		fi
+	
 	elif [ "${command[0]}" == "exit" ]
 	then
 		if [ "${#command[*]}" == 1 ]
@@ -143,9 +157,10 @@ do
 			report_argument_num_error exit
 		fi
 
-	else
-		report_argument_num_error	
+	
 
+	elif [ "${#command[*]}" != "0" ]; then
+		echo "Unknown command! Please enter \"commands\" to check for all commands"
 	fi
 
 done

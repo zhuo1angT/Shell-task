@@ -10,9 +10,15 @@
 
 function generate_all_family()
 {
+
+    # Maintain a stack to do the recursive family asign
+    # without function calls
+
+    unset fam 
+
     top=0
 
-    for file in ./*; do
+    for file in ./*.json; do
         if test -f "$file"; then
                     
             id=$(cat "$file" | jq .id)
@@ -64,13 +70,6 @@ function query_person_family()
         if [[ $st != "null" ]]; then
             echo "$st"
         else
-            # Maintain a stack to do the recursive family asign
-            # without function calls
-            top=0
-
-            generate_all_family
-
-
             if [ -z "${fam[$1]}" ]; then
                 echo "wildman"
             else
@@ -78,4 +77,23 @@ function query_person_family()
             fi
         fi
     fi
+}
+
+
+function process_family()
+{
+    for file in ./*.json; do
+        if test -f "$file"; then
+            cur_fm=$(cat "$file" | jq -r .family)
+            cur_id=$(cat "$file" | jq .id)
+            cur_name=$(cat "$file" | jq -r .name)
+            if [ -z "${fam[cur_id]}" ] && [  "$cur_fm" == "null" ]; then
+                echo "$cur_id: \"$cur_name\"" >> "$1"/wildman.family
+            elif [ -n "${fam[cur_id]}" ]; then
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"${fam[cur_id]}".family
+            elif [ -n "$cur_fm" ]; then
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"$cur_fm".family
+            fi
+        fi
+    done
 }
