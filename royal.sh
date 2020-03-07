@@ -148,6 +148,12 @@ do
 			report_argument_num_error processFamily
 		fi
 	
+
+	elif [ "${command[0]}" == "green" ]
+	then
+		green
+
+
 	elif [ "${command[0]}" == "exit" ]
 	then
 		if [ "${#command[*]}" == 1 ]

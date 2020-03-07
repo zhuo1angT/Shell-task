@@ -50,7 +50,7 @@ function generate_all_family()
                     if [ "$child_fm" == "null" ] && [ -z "${fam[cur_child]}" ]; then    
                         fam[cur_child]=$fm
                         stack[$top]=$cur_child
-                        top=$top+1
+                        top=$((top+1))
                     fi
                 done
             done
@@ -88,12 +88,75 @@ function process_family()
             cur_id=$(cat "$file" | jq .id)
             cur_name=$(cat "$file" | jq -r .name)
             if [ -z "${fam[cur_id]}" ] && [  "$cur_fm" == "null" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/wildman.family
+                echo "$cur_id: \"$cur_name\"" >> "$1"/wildman
             elif [ -n "${fam[cur_id]}" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/"${fam[cur_id]}".family
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"${fam[cur_id]}"
             elif [ -n "$cur_fm" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/"$cur_fm".family
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"$cur_fm"
             fi
         fi
     done
 }
+
+
+
+function green() { 
+    
+    line_cnt=0
+
+    for file in ./*.json; do
+        if test -f "$file"; then
+            fm=$(cat "$file" | jq -r .family)
+            sex=$(cat "$file" | jq -r .sex)
+            id=$(cat "$file" | jq .id)
+            if { [ "$fm" == "null" ] && [ -z "${fam[id]}" ]; } || [ "$sex" == "female" ]; then
+                continue
+            fi
+            
+            child_cnt=$(cat "$file" | jq '.children|length')
+            for ((i=0; i < "$child_cnt"; i++)) do
+                child_id=$(cat "$file" | jq .children[$i])
+                child_fm=$(cat "$child_id".json | jq -r .family)
+
+                
+                if [ "$fm" == "null" ]; then
+                    father_fam=${fam[id]}
+                else
+                    father_fam=$fm
+                fi
+
+                if [ "$father_fam" != "$child_fm" ] && [ "$child_fm" != "null" ]; then
+                    child_name=$(cat "$child_id".json | jq .name)
+ 
+                    raw_str[line_cnt*2]="$child_id:"
+                    raw_str[line_cnt*2+1]="$child_name"
+                    line_cnt=$((line_cnt+1))
+ 
+                fi
+            done
+            
+            #echo "$fm $child_num"
+        fi
+    done
+    
+
+    index=0
+    for ((i=0; i < 10; i++)); do
+        cur_file_lines=$((line_cnt/10))
+
+        if [ $i \< $((line_cnt%10)) ]; then
+            cur_file_lines=$((cur_file_lines+1))
+        fi
+        
+        for ((j=0; j < cur_file_lines * 2; j++)); do
+
+            str1=$(printf "%s" "${raw_str[index]}" | base64)
+            str2=$(printf "%s" "${raw_str[index+1]}" | base64)
+
+            echo "$str1$str2" >> "illegitimacy$i.base"
+            index=$((index+2))
+        done
+    done
+    
+}
+
