@@ -329,7 +329,7 @@ function process_title()
         output_path="$1"
     fi
 
-    rm """$output_path""/final.title" >> /dev/null
+    (rm """$output_path""/final.title") >> /dev/null
 
     for file1 in ./*.json; do
         if test -f "$file1"; then
