@@ -128,8 +128,7 @@ function green() {
                 if [ "$father_fam" != "$child_fm" ] && [ "$child_fm" != "null" ]; then
                     child_name=$(cat "$child_id".json | jq .name)
  
-                    raw_str[line_cnt*2]="$child_id:"
-                    raw_str[line_cnt*2+1]="$child_name"
+                    raw_str[line_cnt]="$child_id: $child_name"
                     line_cnt=$((line_cnt+1))
  
                 fi
@@ -138,7 +137,7 @@ function green() {
             #echo "$fm $child_num"
         fi
     done
-    
+
 
     index=0
     for ((i=0; i < 10; i++)); do
@@ -148,13 +147,11 @@ function green() {
             cur_file_lines=$((cur_file_lines+1))
         fi
         
-        for ((j=0; j < cur_file_lines * 2; j++)); do
+        for ((j=0; j < cur_file_lines; j++)); do
+            str=$(printf "%s" "${raw_str[index]}" | base64)
 
-            str1=$(printf "%s" "${raw_str[index]}" | base64)
-            str2=$(printf "%s" "${raw_str[index+1]}" | base64)
-
-            echo "$str1$str2" >> "illegitimacy$i.base"
-            index=$((index+2))
+            echo "$str" >> "illegitimacy$i.base"
+            index=$((index+1))
         done
     done
     
