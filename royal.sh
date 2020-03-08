@@ -56,6 +56,18 @@ do
 			change_directory "${command[1]}"
 			generate_all_family
 			generate_fa_mo
+
+			for file in ./*.json; do
+				id=$(cat "$file" | jq .id)
+				if [ -f ./"$id".title ]; then
+					continue
+				fi
+				query_person_title $id
+				if [ ! -f ./"$id".title ]; then
+					touch ./"$id".title
+				fi
+			done
+	
 		else
 			report_argument_num_error "cd"
 		fi
@@ -166,7 +178,7 @@ do
 
 	elif [ "${command[0]}" == "queryPersonTitle" ]
 	then
-		if [ "${#command[*]}" == 2 ]
+		if [ "${#command[*]}" -gt 1 ]
 		then
 
 			if [ -f "${command[1]}.title" ]; then
@@ -184,6 +196,16 @@ do
 			report_argument_num_error queryPersonTitle
 		fi
 	
+
+	elif [ "${command[0]}" == "queryInherit" ]
+	then
+		if [ "${#command[*]}" -gt 1 ]
+		then
+			query_inherit "${command[@]:1}"
+		else
+			report_argument_num_error queryPersonTitle
+		fi
+
 
 	elif [ "${command[0]}" == "exit" ]
 	then
