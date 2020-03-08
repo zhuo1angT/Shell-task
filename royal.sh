@@ -59,6 +59,7 @@ do
 			report_argument_num_error "cd"
 		fi
 
+		
 
 
 	elif [ "${command[0]}" == "cp" ]
@@ -151,8 +152,26 @@ do
 
 	elif [ "${command[0]}" == "green" ]
 	then
-		green
+		if [ "${#command[*]}" == 1 ]
+		then
+			green
+		elif [ "${#command[*]}" == 2 ]
+		then
+			green "${command[1]}"
+		else
+			report_argument_num_error green
+		fi
 
+
+	elif [ "${command[0]}" == "queryPersonTitle" ]
+	then
+		if [ "${#command[*]}" == 2 ]
+		then
+			query_person_title "${command[1]}"
+		else
+			report_argument_num_error queryPersonTitle
+		fi
+	
 
 	elif [ "${command[0]}" == "exit" ]
 	then
@@ -163,7 +182,8 @@ do
 			report_argument_num_error exit
 		fi
 
-	
+
+
 
 	elif [ "${#command[*]}" != "0" ]; then
 		echo "Unknown command! Please enter \"commands\" to check for all commands"

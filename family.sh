@@ -44,7 +44,6 @@ function generate_all_family()
                     cur_child=$(cat "$cur_id".json | jq .children[$i])
                     child_fm=$(cat "$cur_child".json | jq -r .family)
                             
-    
                     # No family field in JSON
                     # Should asign family field to him (her)
                     if [ "$child_fm" == "null" ] && [ -z "${fam[cur_child]}" ]; then    
@@ -56,7 +55,6 @@ function generate_all_family()
             done
         fi
     done    
-
 }
 
 
@@ -139,6 +137,12 @@ function green() {
     done
 
 
+    if [ $# == 0 ]; then
+        dir="./"
+    else
+        dir="$1"
+    fi
+
     index=0
     for ((i=0; i < 10; i++)); do
         cur_file_lines=$((line_cnt/10))
@@ -150,7 +154,7 @@ function green() {
         for ((j=0; j < cur_file_lines; j++)); do
             str=$(printf "%s" "${raw_str[index]}" | base64)
 
-            echo "$str" >> "illegitimacy$i.base"
+            echo "$str" >> "$dir/illegitimacy$i.base"
             index=$((index+1))
         done
     done
