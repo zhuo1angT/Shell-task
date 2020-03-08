@@ -55,6 +55,7 @@ do
 		then
 			change_directory "${command[1]}"
 			generate_all_family
+			generate_fa_mo
 		else
 			report_argument_num_error "cd"
 		fi
@@ -167,7 +168,18 @@ do
 	then
 		if [ "${#command[*]}" == 2 ]
 		then
-			query_person_title "${command[1]}"
+
+			if [ -f "${command[1]}.title" ]; then
+				while read line; do
+        			echo "$line"
+    			done < "${command[1]}.title"
+			else
+				query_person_title "${command[1]}"
+				while read line; do
+        			echo "$line"
+    			done < "${command[1]}.title"
+			fi
+
 		else
 			report_argument_num_error queryPersonTitle
 		fi
