@@ -176,12 +176,24 @@ function query_person_title()
 function query_inherit()
 {
     input_str=""
-	for i in "$@"; do
-        input_str="$input_str $i"
-    done
-    input_str=${input_str:1}
 
 
+    if [ $# == "1" ]; then
+        for i in "$@"; do
+            input_str="$input_str $i"
+            cnnnt=$((cnnnt+1))
+        done
+        input_str=${input_str:1}
+    else
+        input_str=$1
+    fi
+
+
+
+
+
+
+    #input_str="Kingdom of León"
 
     found_title=0
 
@@ -209,8 +221,12 @@ function query_inherit()
 
 
     if [ $found_title == "0" ]; then
-        echo "Error! No such title in the current Database!"
-        return 1
+        if [ $# != "2" ]; then 
+            echo "Error! No such title in the current Database!"
+        else
+            echo "Error! No such title in the current Database!" >> "$2/final.title"
+        fi
+        return 0
     fi
 
 
@@ -239,7 +255,11 @@ function query_inherit()
         done
 
         if [ "$child_num" == "0" ]; then
-            echo "Finally no one inherits this title"
+            if [ $# != "2" ]; then 
+                echo "Finally no one inherits this title"
+            else
+                echo "$1, null" >> "$2/final.title"
+            fi
             return 0
         fi
 
@@ -248,7 +268,13 @@ function query_inherit()
             inherit_child_index=$((title_index % child_num))
             inherit_child_id=$(cat "$id".json | jq .children["${inherit_child_index}"])
             inherit_child_name=$(cat "$id".json | jq -r .name)
-            echo "$inherit_child_id: $inherit_child_name"
+            
+            if [ $# != "2" ]; then 
+                echo "$inherit_child_id: $inherit_child_name"
+            else
+                echo "$1, $inherit_child_id: $inherit_child_name" >> "$2/final.title"
+            fi
+
             return 0
         fi
 
@@ -274,17 +300,51 @@ function query_inherit()
     	done < "$id.title"
 
         if [ $actural_inherits == "0" ]; then
-            echo "Finally no one inherits this title"
+            if [ $# != "2" ]; then 
+                echo "Finally no one inherits this title"
+            else
+                echo "$1, null" >> "$2/final.title"
+            fi
             return 0
         fi
     done
-    echo "$id"
+    
+    name=$(cat "$id".json | jq -r .name)
+    
+    
+    if [ $# != "2" ]; then 
+        echo "$id: $name"
+    else
+        echo "$1, $id: $name" >> "$2/final.title"
+    fi
 }
 
 
 function process_title()
 {
-    ""
+    
+    if [ $# == "0" ]; then
+        output_path="./"
+    else 
+        output_path="$1"
+    fi
+
+    rm """$output_path""/final.title" >> /dev/null
+
+    for file1 in ./*.json; do
+        if test -f "$file1"; then
+
+            title_num=$(cat "$file1" | jq '.titles|length')
+
+            for ((y=0; y < title_num; y++)); do
+            
+                cur_title=$(cat "$file1" | jq -r .titles["$y"])
+
+                query_inherit "$cur_title" "$output_path"
+            
+            done
+        fi
+    done
 }
 
 

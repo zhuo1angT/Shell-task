@@ -206,6 +206,18 @@ do
 			report_argument_num_error queryPersonTitle
 		fi
 
+	elif [ "${command[0]}" == "processTitle" ]
+	then
+		if [ "${#command[*]}" == "1" ]
+		then
+			process_title 
+		elif [ "${#command[*]}" == "2" ]
+		then
+			process_title "${command[1]}"
+		else
+			report_argument_num_error processTitle
+		fi
+
 
 	elif [ "${command[0]}" == "exit" ]
 	then
