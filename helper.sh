@@ -22,8 +22,8 @@ function list_command()
 	echo -e "processFamily \t\t[\033[4mOutput File Path\033[0m]"
 	echo -e "green \t\t\t[\033[4mOutput File Path\033[0m]"
 	
-	echo -e "queryPersonTitle \t[\033[4mPerson ID\033[0m]"
-	echo -e "queryInherit \t\t[\033[4mTitle Name\033[0m]"
+	echo -e "queryPersonTitle \t\033[4mPerson ID\033[0m"
+	echo -e "queryInherit \t\t\033[4mTitle Name\033[0m"
 	echo -e "processTitle \t\t[\033[4mOutput File Path\033[0m]"
 	
 	echo -e "exit"

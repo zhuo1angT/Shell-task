@@ -7,11 +7,10 @@
 # If the one does not have a family field, then he is not considered as a
 # "illegitimate child", we just have "find father" and "find son" recursively.
 
-
 function generate_all_family()
 {
 
-    # Maintain a stack to do the recursive family asign
+    # Maintain a stack to do the recursive family asignment
     # without function calls
 
     unset fam 
