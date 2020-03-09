@@ -8,6 +8,7 @@ function change_directory()
 	pwd
 }
 
+
 function copy_dircetory()
 {
     st=$(cp ./*.json "$1/")
@@ -16,6 +17,7 @@ function copy_dircetory()
 	fi
 	pwd
 }
+
 
 function database_backup()
 {

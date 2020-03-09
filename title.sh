@@ -22,8 +22,8 @@ function generate_fa_mo()
             sex=$(cat "$file" | jq -r .sex)
 
             for ((i=0; i < child_num; i++)); do
-                child_id=$(cat $file | jq .children[$i])
-                if [ $sex == "male" ]; then
+                child_id=$(cat "$file" | jq .children[$i])
+                if [ "$sex" == "male" ]; then
                     father[$child_id]=$id
                 else
                     mother[$child_id]=$id
@@ -31,12 +31,10 @@ function generate_fa_mo()
             done
         fi
     done
-
-
 }
 
 
-
+# To check if the one have son ( which means daughters have no title to inherit )
 function have_son()
 {
     haveSon=0
@@ -44,13 +42,12 @@ function have_son()
     for ((i=0; i < child_num; i++)); do
         cur_child_id=$(cat "$1".json | jq .children[$i])
         child_sex=$(cat "$cur_child_id".json | jq -r .sex)
-        if [ $child_sex == "male" ]; then
+        if [ "$child_sex" == "male" ]; then
             haveSon=1
             return
         fi
     done
 }
-
 
 
 
@@ -68,6 +65,9 @@ function query_person_title()
         done
     else
         
+
+        # if his / hers father's title have not been calculated
+        # do it first
         if [ ! -f "${father[$1]}.title" ]; then
             query_person_title "${father[$1]}"
         fi
@@ -78,21 +78,23 @@ function query_person_title()
 
 
 
-        sex=$(cat "$1".json | jq -r .sex)
+        
 
 
         # check if father have son
         have_son "${father[$1]}"
         
+        sex=$(cat "$1".json | jq -r .sex)
+        
         have_maintitle=0
 
-        if [ $sex == "male" ] || [ $haveSon == "0" ]; then
+        if [ "$sex" == "male" ] || [ $haveSon == "0" ]; then
 
             # calc "fa-rank"
             fa_child_num=$(cat "${father[$1]}".json | jq '.children|length')
             for ((i=0; i < fa_child_num; i++)); do
                 cur_child_id=$(cat "${father[$1]}".json | jq .children[$i])
-                if [ $cur_child_id == $1 ]; then
+                if [ "$cur_child_id" == "$1" ]; then
                     fa_rank=$i
                     break
                 fi
@@ -114,7 +116,7 @@ function query_person_title()
 
                 fa_title_num=$(cat "${father[$1]}".json | jq '.title|length')
                 
-                while [ $index \< $fa_title_num ]; do
+                while [ $index \< "$fa_title_num" ]; do
                     cur_title=$(sed -n "${index}p" "${father[$1]}".title)
                     printf "%s\n" "$cur_title" >>  "$1.title"
                     index=$((index+fa_child_num-1))
@@ -124,24 +126,21 @@ function query_person_title()
         fi
 
         have_son "${mother[$1]}"
+        
 
-        #echo "mother = ${mother[$1]}"
-        #echo "sex = $sex"
-        #echo "haveSom = $haveSon"
 
-        if [ $sex == "male" ] || [ $haveSon == "0" ]; then
+        if [ "$sex" == "male" ] || [ $haveSon == "0" ]; then
 
             # calc "ma-rank"
             mo_child_num=$(cat "${mother[$1]}".json | jq '.children|length')
             for ((i=0; i < mo_child_num; i++)); do
                 cur_child_id=$(cat "${mother[$1]}".json | jq .children[$i])
-                if [ $cur_child_id == $1 ]; then
+                if [ "$cur_child_id" == "$1" ]; then
                     mo_rank=$i
                     break
                 fi
             done
 
-            #echo "mo_rank = $mo_rank"
 
             if [ $mo_rank == "0" ]; then 
                 # first_child
@@ -174,13 +173,11 @@ function query_person_title()
 
 function query_inherit()
 {
+    # if the input string was split into a array, splicing them
     input_str=""
-
-
     if [ $# == "1" ]; then
         for i in "$@"; do
             input_str="$input_str $i"
-            cnnnt=$((cnnnt+1))
         done
         input_str=${input_str:1}
     else
@@ -189,20 +186,12 @@ function query_inherit()
 
 
 
-
-
-
-    #input_str="Kingdom of León"
-
     found_title=0
 
     for file in ./*.json; do
         title_num=$(cat "$file" | jq '.titles|length')    
         for ((i=0; i < title_num; i++)); do
             cur_title=$(cat "$file" | jq -r .titles[$i])
-
-            #echo "cur_title = $cur_title"
-            #echo "input_str = $input_str"
 
             if [ "$cur_title" == "$input_str" ]; then
                 id=$(cat "$file" | jq .id)
@@ -234,8 +223,6 @@ function query_inherit()
     child_num=$(cat "$id".json | jq '.children|length')
     sex=$(cat "$id".json | jq -r .sex)
 
-    #echo "child_num = $child_num"
-    #echo "id = $id"
 
     while [ "$child_num" != "0" ]; do
         #sons_id
@@ -244,8 +231,6 @@ function query_inherit()
             child_id=$(cat "$id".json | jq .children[$i])
             child_sex=$(cat "$child_id".json | jq -r .sex)
 
-            #echo "child_id = $child_id"
-            #echo "child_sex = $child_sex"
 
             if [ "$child_sex" == "male" ]; then
                 sons_id[$son_count]=$child_id
@@ -253,6 +238,7 @@ function query_inherit()
             fi
         done
 
+        # no child, finally, the current title lost
         if [ "$child_num" == "0" ]; then
             if [ $# != "2" ]; then 
                 echo "Finally no one inherits this title"
@@ -262,8 +248,9 @@ function query_inherit()
             return 0
         fi
 
-        # only have daughter
+        # only have daughter, inherit by the daughter
         if [ "$son_count" == "0" ]; then
+
             inherit_child_index=$((title_index % child_num))
             inherit_child_id=$(cat "$id".json | jq .children["${inherit_child_index}"])
             inherit_child_name=$(cat "$id".json | jq -r .name)
@@ -281,22 +268,21 @@ function query_inherit()
         id="${sons_id[inherit_son_index]}"
         child_num=$(cat "$id".json | jq '.children|length')
 
+        # in case the mother's maintitle lost
         actural_inherits=0
         while read line; do
-
             line_str=""
 	        for i in "${line[@]}"; do
                 line_str="$line_str $i"
             done
             line_str=${line_str:1}
 
-
-
             if [ "$line_str" == "$input_str" ]; then
                 actural_inherits=1
                 break
             fi
     	done < "$id.title"
+
 
         if [ $actural_inherits == "0" ]; then
             if [ $# != "2" ]; then 
@@ -308,8 +294,11 @@ function query_inherit()
         fi
     done
     
-    name=$(cat "$id".json | jq -r .name)
     
+    # get out of the while-loop
+    # which means the final one doesn't have any child
+
+    name=$(cat "$id".json | jq -r .name)
     
     if [ $# != "2" ]; then 
         echo "$id: $name"
@@ -328,8 +317,8 @@ function process_title()
         output_path="$1"
     fi
 
-    if [ -f """$output_path""/final.title" ]; then
-        (rm """$output_path""/final.title")
+    if [ -f "$output_path""/final.title" ]; then
+        rm "$output_path""/final.title"
     fi
 
 
@@ -338,18 +327,15 @@ function process_title()
 
             title_num=$(cat "$file1" | jq '.titles|length')
 
-            for ((y=0; y < title_num; y++)); do
-            
-                cur_title=$(cat "$file1" | jq -r .titles["$y"])
-
+            for ((j=0; j < title_num; j++)); do
+                cur_title=$(cat "$file1" | jq -r .titles["$j"])
                 query_inherit "$cur_title" "$output_path"
-            
             done
         fi
     done
 
-    sort """$output_path""/ufinal.title" -k 2 > """$output_path""/final.title"
-    rm """$output_path""/ufinal.title"
+    sort "$output_path""/ufinal.title" -k 2 > "$output_path""/final.title"
+    rm "$output_path""/ufinal.title"
 }
 
 
