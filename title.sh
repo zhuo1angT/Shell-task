@@ -224,7 +224,7 @@ function query_inherit()
         if [ $# != "2" ]; then 
             echo "Error! No such title in the current Database!"
         else
-            echo "Error! No such title in the current Database!" >> "$2/final.title"
+            echo "Error! No such title in the current Database!" >> "$2/ufinal.title"
         fi
         return 0
     fi
@@ -258,7 +258,7 @@ function query_inherit()
             if [ $# != "2" ]; then 
                 echo "Finally no one inherits this title"
             else
-                echo "$1, null" >> "$2/final.title"
+                echo "null, $1" >> "$2/ufinal.title"
             fi
             return 0
         fi
@@ -272,7 +272,7 @@ function query_inherit()
             if [ $# != "2" ]; then 
                 echo "$inherit_child_id: $inherit_child_name"
             else
-                echo "$1, $inherit_child_id: $inherit_child_name" >> "$2/final.title"
+                echo "$inherit_child_id: $inherit_child_name, $1" >> "$2/ufinal.title"
             fi
 
             return 0
@@ -303,7 +303,7 @@ function query_inherit()
             if [ $# != "2" ]; then 
                 echo "Finally no one inherits this title"
             else
-                echo "$1, null" >> "$2/final.title"
+                echo "null, $1" >> "$2/ufinal.title"
             fi
             return 0
         fi
@@ -315,7 +315,7 @@ function query_inherit()
     if [ $# != "2" ]; then 
         echo "$id: $name"
     else
-        echo "$1, $id: $name" >> "$2/final.title"
+        echo "$id: $name, $1" >> "$2/ufinal.title"
     fi
 }
 
@@ -329,7 +329,10 @@ function process_title()
         output_path="$1"
     fi
 
-    (rm """$output_path""/final.title") >> /dev/null
+    if [ -f """$output_path""/final.title" ]; then
+        (rm """$output_path""/final.title")
+    fi
+
 
     for file1 in ./*.json; do
         if test -f "$file1"; then
@@ -345,6 +348,9 @@ function process_title()
             done
         fi
     done
+
+    sort """$output_path""/ufinal.title" -k 2 > """$output_path""/final.title"
+    rm """$output_path""/ufinal.title"
 }
 
 

@@ -86,11 +86,11 @@ function process_family()
             cur_id=$(cat "$file" | jq .id)
             cur_name=$(cat "$file" | jq -r .name)
             if [ -z "${fam[cur_id]}" ] && [  "$cur_fm" == "null" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/wildman
+                echo "$cur_id: \"$cur_name\"" >> "$1"/wildman.family
             elif [ -n "${fam[cur_id]}" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/"${fam[cur_id]}"
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"${fam[cur_id]}".family
             elif [ -n "$cur_fm" ]; then
-                echo "$cur_id: \"$cur_name\"" >> "$1"/"$cur_fm"
+                echo "$cur_id: \"$cur_name\"" >> "$1"/"$cur_fm".family
             fi
         fi
     done

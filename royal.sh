@@ -7,6 +7,8 @@ echo "Royal family database management system  0.1"
 echo "Enter \"commands\" to get command list."
 echo -e "Enter \"help \033[4mcommand\033[0m\" to get more detailed command info."
 echo ""
+echo "Please use the \"cd\" command first, to change the working dirctory to where data is stored."
+echo ""
 
 
 
