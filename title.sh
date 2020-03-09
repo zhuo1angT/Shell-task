@@ -148,7 +148,6 @@ function query_person_title()
                 
                 mo_main_title=$(sed -n '1p' "${mother[$1]}".title)
 
-                echo "have_maintitle = $have_maintitle"
 
                 if [ "${mo_main_title}" != "" ] && [ $have_maintitle != "1" ]; then
                     printf "%s\n" "$mo_main_title" >>  "$1.title"

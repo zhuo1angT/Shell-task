@@ -94,6 +94,11 @@ function process_family()
             fi
         fi
     done
+
+    for file in ./*.family; do
+        sort "$file" > "./temp.family" 
+        rm "$file"; mv "./temp.family"  "$file"
+    done
 }
 
 

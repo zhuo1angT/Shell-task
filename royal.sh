@@ -11,7 +11,6 @@ echo "Please use the \"cd\" command first, to change the working dirctory to whe
 echo ""
 
 
-
 source ./helper.sh 
 source ./directory.sh
 source ./family.sh
@@ -20,11 +19,9 @@ source ./title.sh
 
 while true
 do
-	echo -e "\033[36mroyal> \033[0m\c"  # When debug, comment this line, tool bug here
+	echo -e "\033[36mroyal> \033[0m\c"  
 
 	read -a command
-
-	#echo "${#command[*]}"
 
 
 	if [ "${command[0]}" == "commands" ]
@@ -56,6 +53,13 @@ do
 		if [ "${#command[*]}" == 2 ]
 		then
 			change_directory "${command[1]}"
+
+			authority=$(stat -c %a ./)
+			if [ "$authority" != "700" ]; then
+				echo "Warn! The current working dircetory could be read / write by others!"	
+			fi
+
+
 			generate_all_family
 			generate_fa_mo
 
@@ -139,7 +143,7 @@ do
 
 
 
-
+	# Family functions, implemented in family.sh
 
 	elif [ "${command[0]}" == "queryPersonFamily" ]
 	then
@@ -177,6 +181,8 @@ do
 			report_argument_num_error green
 		fi
 
+
+	# Title inherit functions, implemented in title.sh
 
 	elif [ "${command[0]}" == "queryPersonTitle" ]
 	then
@@ -229,8 +235,6 @@ do
 		else
 			report_argument_num_error exit
 		fi
-
-
 
 
 	elif [ "${#command[*]}" != "0" ]; then
