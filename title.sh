@@ -175,7 +175,7 @@ function query_inherit()
 {
     # if the input string was split into a array, splicing them
     input_str=""
-    if [ $# != "1" ]; then
+    if [ $# != "2" ]; then
         for i in "$@"; do
             input_str="$input_str $i"
         done
@@ -183,7 +183,6 @@ function query_inherit()
     else
         input_str=$1
     fi
-
 
 
     found_title=0
