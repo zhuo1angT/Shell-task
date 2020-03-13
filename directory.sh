@@ -23,12 +23,12 @@ function database_backup()
 {
 	archive=backup-$(date +"%Y-%m-%d""-""%H-%M")
 
-	if [ "$#" == 2 ]; then
-		archive="$2"/$archive
+	if [ "$#" == 1 ]; then
+		archive="$1"/$archive
 	fi
 
-	tar czf "$archive".tar.gz "*.json"
-	echo "Directory $PWD backed up in archive file \"$archive.tar.gz\"."
+	tar -czf "$archive".tar.gz "./"
+	echo "Directory backed up in archive file \"$archive.tar.gz\"."
 
 }
 

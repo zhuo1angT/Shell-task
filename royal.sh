@@ -56,7 +56,7 @@ do
 
 			authority=$(stat -c %a ./)
 			if [ "$authority" != "700" ]; then
-				echo "Warn! The current working dircetory could be read / write by others!"	
+				echo "Warning! The current working dircetory could be read / write by others!"	
 			fi
 
 
@@ -96,7 +96,7 @@ do
 
 		if [ "${#command[*]}" == 2 ]
 		then
-			database_backup "${command[0]}"
+			database_backup "${command[1]}"
 		elif [ "${#command[*]}" == 1 ]
 		then
 			database_backup

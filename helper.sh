@@ -18,7 +18,7 @@ function list_command()
 	echo -e "restore \t\t\033[4mDBFile Path\033[0m [\033[4mWorking Dir\033[0m]"
 	echo -e "import \t\t\t[OPTION] ..."	
 	
-	echo -e "queryFamily \t\t\033[4mPerson ID\033[0m"
+	echo -e "queryPersonFamily \t\033[4mPerson ID\033[0m"
 	echo -e "processFamily \t\t[\033[4mOutput File Path\033[0m]"
 	echo -e "green \t\t\t[\033[4mOutput File Path\033[0m]"
 	
